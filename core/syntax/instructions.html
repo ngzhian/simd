@@ -214,7 +214,7 @@ For the other integer instructions, the use of two’s complement for the signed
 </div>
 </div>
 <div class="section" id="simd-instructions">
-<span id="syntax-instr-simd"></span><span id="syntax-vfrelop"></span><span id="syntax-virelop"></span><span id="syntax-vfbinop"></span><span id="syntax-vfunop"></span><span id="syntax-vsatbinop"></span><span id="syntax-vibinop"></span><span id="syntax-viunop"></span><span id="syntax-vshiftop"></span><span id="syntax-vtestop"></span><span id="syntax-vsternop"></span><span id="syntax-vsbinop"></span><span id="syntax-vsunop"></span><span id="syntax-vbinop"></span><span id="syntax-vunop"></span><span id="index-2"></span><h2>SIMD Instructions<a class="headerlink" href="#simd-instructions" title="Permalink to this headline">¶</a></h2>
+<span id="syntax-instr-simd"></span><span id="syntax-vfrelop"></span><span id="syntax-virelop"></span><span id="syntax-vfbinop"></span><span id="syntax-vfunop"></span><span id="syntax-vsatbinop"></span><span id="syntax-viminmaxop"></span><span id="syntax-vibinop"></span><span id="syntax-viunop"></span><span id="syntax-vshiftop"></span><span id="syntax-vtestop"></span><span id="syntax-vsternop"></span><span id="syntax-vsbinop"></span><span id="syntax-vsunop"></span><span id="syntax-vbinop"></span><span id="syntax-vunop"></span><span id="index-2"></span><h2>SIMD Instructions<a class="headerlink" href="#simd-instructions" title="Permalink to this headline">¶</a></h2>
 <p>SIMD instructions provide basic operations over <a class="reference internal" href="values.html#syntax-value"><span class="std std-ref">values</span></a> of type <span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{llcl}
@@ -258,11 +258,10 @@ For the other integer instructions, the use of two’s complement for the signed
   \mathsf{i16x8.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{widen}}\mathsf{\_high}\mathsf{\_i8x16\_}\href{../syntax/instructions.html#syntax-sx}{\mathit{sx}} ~|~
   \mathsf{i32x4.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{widen}}\mathsf{\_high}\mathsf{\_i16x8\_}\href{../syntax/instructions.html#syntax-sx}{\mathit{sx}} \\&amp;&amp;|&amp;
   \mathit{ixx}\mathsf{.}\href{../syntax/instructions.html#syntax-vshiftop}{\mathit{vshiftop}} \\&amp;&amp;|&amp;
-  \mathsf{i8x16.}\href{../syntax/instructions.html#syntax-vibinop}{\mathit{vibinop}} ~|~
-  \mathsf{i16x8.}\href{../syntax/instructions.html#syntax-vibinop}{\mathit{vibinop}} ~|~
-  \mathsf{i32x4.}\href{../syntax/instructions.html#syntax-vibinop}{\mathit{vibinop}} \\&amp;&amp;|&amp;
-  \mathsf{i64x2.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{add}} ~|~
-  \mathsf{i64x2.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{sub}} \\&amp;&amp;|&amp;
+  \mathit{ixx}\mathsf{.}\href{../syntax/instructions.html#syntax-vibinop}{\mathit{vibinop}} \\&amp;&amp;|&amp;
+  \mathsf{i8x16.}\href{../syntax/instructions.html#syntax-viminmaxop}{\mathit{viminmaxop}} ~|~
+  \mathsf{i16x8.}\href{../syntax/instructions.html#syntax-viminmaxop}{\mathit{viminmaxop}} ~|~
+  \mathsf{i32x4.}\href{../syntax/instructions.html#syntax-viminmaxop}{\mathit{viminmaxop}} \\&amp;&amp;|&amp;
   \mathsf{i8x16.}\href{../syntax/instructions.html#syntax-vsatbinop}{\mathit{vsatbinop}} ~|~
   \mathsf{i16x8.}\href{../syntax/instructions.html#syntax-vsatbinop}{\mathit{vsatbinop}} \\&amp;&amp;|&amp;
   \mathsf{i16x8.}\mathsf{mul} ~|~
@@ -309,7 +308,8 @@ For the other integer instructions, the use of two’s complement for the signed
   \mathsf{neg} \\
 \def\mathdef1520#1{{}}\mathdef1520{SIMD integer binary operator} &amp; \href{../syntax/instructions.html#syntax-vibinop}{\mathit{vibinop}} &amp;::=&amp;
   \mathsf{add} ~|~
-  \mathsf{sub} ~|~
+  \mathsf{sub} \\
+\def\mathdef1520#1{{}}\mathdef1520{SIMD integer binary min/max operator} &amp; \href{../syntax/instructions.html#syntax-viminmaxop}{\mathit{viminmaxop}} &amp;::=&amp;
   \mathsf{min\_}\href{../syntax/instructions.html#syntax-sx}{\mathit{sx}} ~|~
   \mathsf{max\_}\href{../syntax/instructions.html#syntax-sx}{\mathit{sx}} \\
 \def\mathdef1520#1{{}}\mathdef1520{SIMD integer saturating binary operator} &amp; \href{../syntax/instructions.html#syntax-vsatbinop}{\mathit{vsatbinop}} &amp;::=&amp;
