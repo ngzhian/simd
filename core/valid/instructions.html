@@ -199,16 +199,19 @@ In contrast,</p>
 <span id="valid-instr-simd"></span><span id="index-2"></span><h2>SIMD Instructions<a class="headerlink" href="#simd-instructions" title="Permalink to this headline">¶</a></h2>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
-<p>to we need v128.const here again? It’s covered above by Numeric Instructions.</p>
+<p>do we need v128.const here again? It’s covered above by Numeric Instructions.</p>
 </div>
 <div class="admonition-todo admonition" id="id2">
 <p class="admonition-title">Todo</p>
-<p>not sure if we can use <cite>t</cite> to refer to <cite>i8</cite> and <cite>i16</cite>, since those are not defined in value types.</p>
-</div>
-<div class="admonition-todo admonition" id="id3">
-<p class="admonition-title">Todo</p>
 <p>can we define these instructions that begin with “v128.” together with the numerics? The structure, “t.op” matches up. This will require us to specify in the conventions section of syntax/instructions to extend binop, rather than define a new vsbinop</p>
 </div>
+<p id="aux-bool">SIMD instructions can have a prefix to describe the <a class="reference internal" href="../syntax/instructions.html#syntax-simd-shape"><span class="std std-ref">shape</span></a> of the operand. Packed numeric types, <span class="math notranslate nohighlight">\(\href{../syntax/values.html#syntax-int}{\mathit{i8}}\)</span> and <span class="math notranslate nohighlight">\(\href{../syntax/values.html#syntax-int}{\mathit{i16}}\)</span>, are not <a class="reference internal" href="../syntax/types.html#syntax-valtype"><span class="std std-ref">value type</span></a>, we define an auxiliary function to map such packed types into value types:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{lll&#64;{\qquad}l}
+\href{../valid/instructions.html#aux-packed}{\mathrm{packed}}(\mathsf{i8x16}) &amp;=&amp; \href{../syntax/types.html#syntax-valtype}{\mathsf{i32}} \\
+\href{../valid/instructions.html#aux-packed}{\mathrm{packed}}(\mathsf{i16x8}) &amp;=&amp; \href{../syntax/types.html#syntax-valtype}{\mathsf{i32}} \\
+\href{../valid/instructions.html#aux-packed}{\mathrm{packed}}(t\mathsf{x}N) &amp;=&amp; t \\
+\end{array}\end{split}\]</div>
 <div class="section" id="t-mathsf-xref-syntax-instructions-syntax-vsunop-mathit-vsunop">
 <span id="valid-vsunop"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{.}\href{../syntax/instructions.html#syntax-vsunop}{\mathit{vsunop}}\)</span><a class="headerlink" href="#t-mathsf-xref-syntax-instructions-syntax-vsunop-mathit-vsunop" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -285,6 +288,22 @@ In contrast,</p>
 }{
   C \href{../valid/instructions.html#valid-instr}{\vdash} vxx\mathsf{.}\href{../syntax/instructions.html#syntax-vtestop}{\mathit{vtestop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]
 }\]</div>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>is this definition of splat okay? Or should we split out i8x16 and i16x8, like below.</p>
+</div>
+</div>
+<div class="section" id="vxx-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat">
+<span id="valid-simd-splat"></span><h3><span class="math notranslate nohighlight">\(vxx\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}}\)</span><a class="headerlink" href="#vxx-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Let <span class="math notranslate nohighlight">\(t\)</span> be <span class="math notranslate nohighlight">\(\href{../valid/instructions.html#aux-packed}{\mathrm{packed}}(vxx)\)</span>.</p></li>
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} vxx\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}} : [t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+}\]</div>
 </div>
 <div class="section" id="mathsf-i8x16-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat">
 <span id="valid-simd-splat-i8x16"></span><h3><span class="math notranslate nohighlight">\(\mathsf{i8x16.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}}\)</span><a class="headerlink" href="#mathsf-i8x16-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat" title="Permalink to this headline">¶</a></h3>
@@ -309,7 +328,7 @@ In contrast,</p>
 }\]</div>
 </div>
 <div class="section" id="t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat">
-<span id="valid-simd-splat"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}}\)</span><a class="headerlink" href="#t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat" title="Permalink to this headline">¶</a></h3>
+<span id="id4"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}}\)</span><a class="headerlink" href="#t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
 </ul>
@@ -318,7 +337,7 @@ In contrast,</p>
 }{
   C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}} : [t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
 }\]</div>
-<div class="admonition-todo admonition" id="id4">
+<div class="admonition-todo admonition" id="id5">
 <p class="admonition-title">Todo</p>
 <p>develop some sort of shorthand for this i8x16 and i16x8 repetition?</p>
 </div>
