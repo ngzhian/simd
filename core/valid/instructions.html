@@ -197,249 +197,191 @@ In contrast,</p>
 </div>
 <div class="section" id="simd-instructions">
 <span id="valid-instr-simd"></span><span id="index-2"></span><h2>SIMD Instructions<a class="headerlink" href="#simd-instructions" title="Permalink to this headline">¶</a></h2>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>do we need v128.const here again? It’s covered above by Numeric Instructions.</p>
-</div>
-<div class="admonition-todo admonition" id="id2">
-<p class="admonition-title">Todo</p>
-<p>can we define these instructions that begin with “v128.” together with the numerics? The structure, “t.op” matches up. This will require us to specify in the conventions section of syntax/instructions to extend binop, rather than define a new vsbinop</p>
-</div>
-<p id="aux-bool">SIMD instructions can have a prefix to describe the <a class="reference internal" href="../syntax/instructions.html#syntax-simd-shape"><span class="std std-ref">shape</span></a> of the operand. Packed numeric types, <span class="math notranslate nohighlight">\(\href{../syntax/values.html#syntax-int}{\mathit{i8}}\)</span> and <span class="math notranslate nohighlight">\(\href{../syntax/values.html#syntax-int}{\mathit{i16}}\)</span>, are not <a class="reference internal" href="../syntax/types.html#syntax-valtype"><span class="std std-ref">value type</span></a>, we define an auxiliary function to map such packed types into value types:</p>
+<p id="aux-unpacked">SIMD instructions can have a prefix to describe the <a class="reference internal" href="../syntax/instructions.html#syntax-simd-shape"><span class="std std-ref">shape</span></a> of the operand. Packed numeric types, <span class="math notranslate nohighlight">\(\href{../exec/runtime.html#syntax-storagetype}{\mathsf{i8}}\)</span> and <span class="math notranslate nohighlight">\(\href{../exec/runtime.html#syntax-storagetype}{\mathsf{i16}}\)</span>, are not <a class="reference internal" href="../syntax/types.html#syntax-valtype"><span class="std std-ref">value type</span></a>, we define an auxiliary function to map such packed types into value types:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{lll&#64;{\qquad}l}
-\href{../valid/instructions.html#aux-packed}{\mathrm{packed}}(\mathsf{i8x16}) &amp;=&amp; \href{../syntax/types.html#syntax-valtype}{\mathsf{i32}} \\
-\href{../valid/instructions.html#aux-packed}{\mathrm{packed}}(\mathsf{i16x8}) &amp;=&amp; \href{../syntax/types.html#syntax-valtype}{\mathsf{i32}} \\
-\href{../valid/instructions.html#aux-packed}{\mathrm{packed}}(t\mathsf{x}N) &amp;=&amp; t \\
+\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(\mathsf{i8x16}) &amp;=&amp; \href{../syntax/types.html#syntax-valtype}{\mathsf{i32}} \\
+\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(\mathsf{i16x8}) &amp;=&amp; \href{../syntax/types.html#syntax-valtype}{\mathsf{i32}} \\
+\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(t\mathsf{x}N) &amp;=&amp; t
 \end{array}\end{split}\]</div>
-<div class="section" id="t-mathsf-xref-syntax-instructions-syntax-vsunop-mathit-vsunop">
-<span id="valid-vsunop"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{.}\href{../syntax/instructions.html#syntax-vsunop}{\mathit{vsunop}}\)</span><a class="headerlink" href="#t-mathsf-xref-syntax-instructions-syntax-vsunop-mathit-vsunop" title="Permalink to this headline">¶</a></h3>
+<p>We also define an auxiliary function to get number of packed numeric types in a <span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\)</span>:</p>
+<div class="math notranslate nohighlight" id="aux-lanes">
+\[\begin{array}{lll&#64;{\qquad}l}
+\href{../valid/instructions.html#aux-lanes}{\mathrm{lanes}}(t\mathsf{x}N) &amp;=&amp; N
+\end{array}\]</div>
+<div class="section" id="xref-syntax-types-syntax-valtype-mathsf-v128-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-const-c">
+<span id="valid-vconst"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{const}}~c\)</span><a class="headerlink" href="#xref-syntax-types-syntax-valtype-mathsf-v128-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-const-c" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [t]\)</span>.</p></li>
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\frac{
 }{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{.}\href{../syntax/instructions.html#syntax-vsunop}{\mathit{vsunop}} : [t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [t]
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{const}}~c : [] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
 }\]</div>
 </div>
-<div class="section" id="t-mathsf-xref-syntax-instructions-syntax-vsbinop-mathit-vsbinop">
-<span id="valid-vsbinop"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{.}\href{../syntax/instructions.html#syntax-vsbinop}{\mathit{vsbinop}}\)</span><a class="headerlink" href="#t-mathsf-xref-syntax-instructions-syntax-vsbinop-mathit-vsbinop" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([t~t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [t]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{.}\href{../syntax/instructions.html#syntax-vsbinop}{\mathit{vsbinop}} : [t~t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [t]
-}\]</div>
-</div>
-<div class="section" id="t-mathsf-xref-syntax-instructions-syntax-vsternop-mathit-vsternop">
-<span id="valid-vsternop"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{.}\href{../syntax/instructions.html#syntax-vsternop}{\mathit{vsternop}}\)</span><a class="headerlink" href="#t-mathsf-xref-syntax-instructions-syntax-vsternop-mathit-vsternop" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([t~t~t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [t]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{.}\href{../syntax/instructions.html#syntax-vsternop}{\mathit{vsternop}} : [t~t~t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [t]
-}\]</div>
-</div>
-<div class="section" id="vxx-mathsf-xref-syntax-instructions-syntax-vunop-mathit-vunop">
-<span id="valid-vunop"></span><h3><span class="math notranslate nohighlight">\(vxx\mathsf{.}\href{../syntax/instructions.html#syntax-vunop}{\mathit{vunop}}\)</span><a class="headerlink" href="#vxx-mathsf-xref-syntax-instructions-syntax-vunop-mathit-vunop" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="xref-syntax-types-syntax-valtype-mathsf-v128-mathsf-xref-syntax-instructions-syntax-vsunop-mathit-vsunop">
+<span id="valid-vsunop"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\mathsf{.}\href{../syntax/instructions.html#syntax-vsunop}{\mathit{vsunop}}\)</span><a class="headerlink" href="#xref-syntax-types-syntax-valtype-mathsf-v128-mathsf-xref-syntax-instructions-syntax-vsunop-mathit-vsunop" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\frac{
 }{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} vxx\mathsf{.}\href{../syntax/instructions.html#syntax-vunop}{\mathit{vunop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\mathsf{.}\href{../syntax/instructions.html#syntax-vsunop}{\mathit{vsunop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
 }\]</div>
 </div>
-<div class="section" id="vxx-mathsf-xref-syntax-instructions-syntax-vbinop-mathit-vbinop">
-<span id="valid-vbinop"></span><h3><span class="math notranslate nohighlight">\(vxx\mathsf{.}\href{../syntax/instructions.html#syntax-vbinop}{\mathit{vbinop}}\)</span><a class="headerlink" href="#vxx-mathsf-xref-syntax-instructions-syntax-vbinop-mathit-vbinop" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="xref-syntax-types-syntax-valtype-mathsf-v128-mathsf-xref-syntax-instructions-syntax-vsbinop-mathit-vsbinop">
+<span id="valid-vsbinop"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\mathsf{.}\href{../syntax/instructions.html#syntax-vsbinop}{\mathit{vsbinop}}\)</span><a class="headerlink" href="#xref-syntax-types-syntax-valtype-mathsf-v128-mathsf-xref-syntax-instructions-syntax-vsbinop-mathit-vsbinop" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\frac{
 }{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} vxx\mathsf{.}\href{../syntax/instructions.html#syntax-vbinop}{\mathit{vbinop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\mathsf{.}\href{../syntax/instructions.html#syntax-vsbinop}{\mathit{vsbinop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
 }\]</div>
 </div>
-<div class="section" id="vxx-mathsf-xref-syntax-instructions-syntax-vternop-mathit-vternop">
-<span id="valid-vternop"></span><h3><span class="math notranslate nohighlight">\(vxx\mathsf{.}\href{../syntax/instructions.html#syntax-vternop}{\mathit{vternop}}\)</span><a class="headerlink" href="#vxx-mathsf-xref-syntax-instructions-syntax-vternop-mathit-vternop" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="xref-syntax-types-syntax-valtype-mathsf-v128-mathsf-xref-syntax-instructions-syntax-vsternop-mathit-vsternop">
+<span id="valid-vsternop"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\mathsf{.}\href{../syntax/instructions.html#syntax-vsternop}{\mathit{vsternop}}\)</span><a class="headerlink" href="#xref-syntax-types-syntax-valtype-mathsf-v128-mathsf-xref-syntax-instructions-syntax-vsternop-mathit-vsternop" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\frac{
 }{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} vxx\mathsf{.}\href{../syntax/instructions.html#syntax-vternop}{\mathit{vternop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\mathsf{.}\href{../syntax/instructions.html#syntax-vsternop}{\mathit{vsternop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
 }\]</div>
 </div>
-<div class="section" id="vxx-mathsf-xref-syntax-instructions-syntax-vtestop-mathit-vtestop">
-<span id="valid-vtestop"></span><h3><span class="math notranslate nohighlight">\(vxx\mathsf{.}\href{../syntax/instructions.html#syntax-vtestop}{\mathit{vtestop}}\)</span><a class="headerlink" href="#vxx-mathsf-xref-syntax-instructions-syntax-vtestop-mathit-vtestop" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="mathsf-v8x16-xref-syntax-instructions-syntax-instr-simd-mathsf-shuffle-xref-syntax-instructions-syntax-laneidx-mathit-laneidx-16">
+<span id="valid-simd-shuffle"></span><h3><span class="math notranslate nohighlight">\(\mathsf{v8x16.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{shuffle}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}^{16}\)</span><a class="headerlink" href="#mathsf-v8x16-xref-syntax-instructions-syntax-instr-simd-mathsf-shuffle-xref-syntax-instructions-syntax-laneidx-mathit-laneidx-16" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} vxx\mathsf{.}\href{../syntax/instructions.html#syntax-vtestop}{\mathit{vtestop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]
-}\]</div>
-<div class="admonition-todo admonition" id="id3">
-<p class="admonition-title">Todo</p>
-<p>is this definition of splat okay? Or should we split out i8x16 and i16x8, like below.</p>
-</div>
-</div>
-<div class="section" id="vxx-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat">
-<span id="valid-simd-splat"></span><h3><span class="math notranslate nohighlight">\(vxx\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}}\)</span><a class="headerlink" href="#vxx-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Let <span class="math notranslate nohighlight">\(t\)</span> be <span class="math notranslate nohighlight">\(\href{../valid/instructions.html#aux-packed}{\mathrm{packed}}(vxx)\)</span>.</p></li>
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} vxx\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}} : [t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
-}\]</div>
-</div>
-<div class="section" id="mathsf-i8x16-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat">
-<span id="valid-simd-splat-i8x16"></span><h3><span class="math notranslate nohighlight">\(\mathsf{i8x16.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}}\)</span><a class="headerlink" href="#mathsf-i8x16-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} \mathsf{i8x16.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
-}\]</div>
-</div>
-<div class="section" id="mathsf-i16x8-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat">
-<span id="valid-simd-splat-i16x8"></span><h3><span class="math notranslate nohighlight">\(\mathsf{i16x8.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}}\)</span><a class="headerlink" href="#mathsf-i16x8-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} \mathsf{i16x8.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
-}\]</div>
-</div>
-<div class="section" id="t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat">
-<span id="id4"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}}\)</span><a class="headerlink" href="#t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-splat" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{splat}} : [t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
-}\]</div>
-<div class="admonition-todo admonition" id="id5">
-<p class="admonition-title">Todo</p>
-<p>develop some sort of shorthand for this i8x16 and i16x8 repetition?</p>
-</div>
-</div>
-<div class="section" id="mathsf-i8x16-xref-syntax-instructions-syntax-instr-numeric-mathsf-replace-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx">
-<span id="valid-simd-replace-lane-i8x16"></span><h3><span class="math notranslate nohighlight">\(\mathsf{i8x16.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{replace\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span><a class="headerlink" href="#mathsf-i8x16-xref-syntax-instructions-syntax-instr-numeric-mathsf-replace-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The lane index <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span> must be smaller than <span class="math notranslate nohighlight">\(16\)</span>.</p></li>
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-  \href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; 16
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} \mathsf{i8x16.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{replace\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
-}\]</div>
-</div>
-<div class="section" id="mathsf-i16x8-xref-syntax-instructions-syntax-instr-numeric-mathsf-replace-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx">
-<span id="valid-simd-replace-lane-i16x8"></span><h3><span class="math notranslate nohighlight">\(\mathsf{i16x8.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{replace\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span><a class="headerlink" href="#mathsf-i16x8-xref-syntax-instructions-syntax-instr-numeric-mathsf-replace-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The lane index <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span> must be smaller than <span class="math notranslate nohighlight">\(8\)</span>.</p></li>
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-  \href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; 8
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} \mathsf{i16x8.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{replace\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
-}\]</div>
-</div>
-<div class="section" id="t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-replace-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx">
-<span id="valid-simd-replace-lane"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{replace\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span><a class="headerlink" href="#t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-replace-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The lane index <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span> must be smaller than <span class="math notranslate nohighlight">\(N\)</span>.</p></li>
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-  \href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; N
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{replace\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
-}\]</div>
-</div>
-<div class="section" id="t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-extract-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx">
-<span id="valid-simd-extract-lane"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{extract\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span><a class="headerlink" href="#t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-extract-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The lane index <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span> must be smaller than <span class="math notranslate nohighlight">\(N\)</span>.</p></li>
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [t]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-  \href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; N
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{extract\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [t]
-}\]</div>
-</div>
-<div class="section" id="t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-extract-lane-mathsf-xref-syntax-instructions-syntax-sx-mathit-sx-xref-syntax-instructions-syntax-laneidx-mathit-laneidx">
-<span id="valid-simd-extract-lane-sx"></span><h3><span class="math notranslate nohighlight">\(t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{extract\_lane}}\mathsf{\_}\href{../syntax/instructions.html#syntax-sx}{\mathit{sx}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span><a class="headerlink" href="#t-mathsf-x-n-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-extract-lane-mathsf-xref-syntax-instructions-syntax-sx-mathit-sx-xref-syntax-instructions-syntax-laneidx-mathit-laneidx" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The lane index <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span> must be smaller than <span class="math notranslate nohighlight">\(N\)</span>.</p></li>
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-  \href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; N
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{extract\_lane}}\mathsf{\_}\href{../syntax/instructions.html#syntax-sx}{\mathit{sx}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]
-}\]</div>
-</div>
-<div class="section" id="ixx-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-bitmask">
-<span id="valid-simd-bitmask"></span><h3><span class="math notranslate nohighlight">\(ixx\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{bitmask}}\)</span><a class="headerlink" href="#ixx-mathsf-xref-syntax-instructions-syntax-instr-numeric-mathsf-bitmask" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{bitmask}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]
-}\]</div>
-</div>
-<div class="section" id="ixx-mathsf-xref-syntax-instructions-syntax-vshiftop-mathit-vshiftop">
-<span id="valid-simd-vshiftop"></span><h3><span class="math notranslate nohighlight">\(ixx\mathsf{.}\href{../syntax/instructions.html#syntax-vshiftop}{\mathit{vshiftop}}\)</span><a class="headerlink" href="#ixx-mathsf-xref-syntax-instructions-syntax-vshiftop-mathit-vshiftop" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\frac{
-}{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} ixx\mathsf{.}\href{../syntax/instructions.html#syntax-vshiftop}{\mathit{vshiftop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
-}\]</div>
-</div>
-<div class="section" id="mathsf-v8x16-xref-syntax-instructions-syntax-instr-numeric-mathsf-shuffle-xref-syntax-instructions-syntax-laneidx-mathit-laneidx-16">
-<span id="valid-simd-shuffle"></span><h3><span class="math notranslate nohighlight">\(\mathsf{v8x16.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{shuffle}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}^{16}\)</span><a class="headerlink" href="#mathsf-v8x16-xref-syntax-instructions-syntax-instr-numeric-mathsf-shuffle-xref-syntax-instructions-syntax-laneidx-mathit-laneidx-16" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>For all <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}_i\)</span>, in <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}^{16}\)</span>, <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}_i\)</span> must be smaller than <span class="math notranslate nohighlight">\(N\)</span>.</p></li>
+<li><p>For all <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}_i\)</span>, in <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}^{16}\)</span>, <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}_i\)</span> must be smaller than <span class="math notranslate nohighlight">\(32\)</span>.</p></li>
 <li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\frac{
-  (\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; N)^{16}
+  (\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; 32)^{16}
 }{
-  C \href{../valid/instructions.html#valid-instr}{\vdash} \mathsf{v8x16.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{shuffle}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \mathsf{v8x16.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{shuffle}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}^{16} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-splat">
+<span id="valid-simd-splat"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{splat}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-splat" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Let <span class="math notranslate nohighlight">\(t\)</span> be <span class="math notranslate nohighlight">\(\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})\)</span>.</p></li>
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{splat}} : [\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-extract-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx">
+<span id="valid-simd-extract-lane"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{extract\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-extract-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The lane index <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span> must be smaller than <span class="math notranslate nohighlight">\(\href{../valid/instructions.html#aux-lanes}{\mathrm{lanes}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})\)</span>.</p></li>
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+  \href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; \href{../valid/instructions.html#aux-lanes}{\mathrm{lanes}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{extract\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-extract-lane-mathsf-xref-syntax-instructions-syntax-sx-mathit-sx-xref-syntax-instructions-syntax-laneidx-mathit-laneidx">
+<span id="valid-simd-extract-lane-sx"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{extract\_lane}}\mathsf{\_}\href{../syntax/instructions.html#syntax-sx}{\mathit{sx}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-extract-lane-mathsf-xref-syntax-instructions-syntax-sx-mathit-sx-xref-syntax-instructions-syntax-laneidx-mathit-laneidx" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The lane index <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span> must be smaller than <span class="math notranslate nohighlight">\(\href{../valid/instructions.html#aux-lanes}{\mathrm{lanes}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})\)</span>.</p></li>
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+  \href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; \href{../valid/instructions.html#aux-lanes}{\mathrm{lanes}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} t\mathsf{x}N\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{extract\_lane}}\mathsf{\_}\href{../syntax/instructions.html#syntax-sx}{\mathit{sx}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-replace-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx">
+<span id="valid-simd-replace-lane"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{replace\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-replace-lane-xref-syntax-instructions-syntax-laneidx-mathit-laneidx" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The lane index <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}}\)</span> must be smaller than <span class="math notranslate nohighlight">\(\href{../valid/instructions.html#aux-lanes}{\mathrm{lanes}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(t\)</span> be <span class="math notranslate nohighlight">\(\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})\)</span>.</p></li>
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~t] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+  \href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &lt; \href{../valid/instructions.html#aux-lanes}{\mathrm{lanes}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{replace\_lane}}~\href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}})] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-vunop-mathit-vunop">
+<span id="valid-vunop"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vunop}{\mathit{vunop}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-vunop-mathit-vunop" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vunop}{\mathit{vunop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-vbinop-mathit-vbinop">
+<span id="valid-vbinop"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vbinop}{\mathit{vbinop}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-vbinop-mathit-vbinop" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vbinop}{\mathit{vbinop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-vternop-mathit-vternop">
+<span id="valid-vternop"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vternop}{\mathit{vternop}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-vternop-mathit-vternop" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vternop}{\mathit{vternop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-ishape-mathsf-xref-syntax-instructions-syntax-vshiftop-mathit-vshiftop">
+<span id="valid-simd-vshiftop"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{ishape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vshiftop}{\mathit{vshiftop}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-ishape-mathsf-xref-syntax-instructions-syntax-vshiftop-mathit-vshiftop" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/instructions.html#syntax-shape}{\mathit{ishape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vshiftop}{\mathit{vshiftop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}~\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-vtestop-mathit-vtestop">
+<span id="valid-vtestop"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vtestop}{\mathit{vtestop}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-shape-mathsf-xref-syntax-instructions-syntax-vtestop-mathit-vtestop" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vtestop}{\mathit{vtestop}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]
+}\]</div>
+</div>
+<div class="section" id="xref-syntax-instructions-syntax-shape-mathit-ishape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-bitmask">
+<span id="valid-simd-bitmask"></span><h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{ishape}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{bitmask}}\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-shape-mathit-ishape-mathsf-xref-syntax-instructions-syntax-instr-simd-mathsf-bitmask" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The instruction is valid with type <span class="math notranslate nohighlight">\([\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\frac{
+}{
+  C \href{../valid/instructions.html#valid-instr}{\vdash} \href{../syntax/instructions.html#syntax-shape}{\mathit{ishape}}\mathsf{.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{bitmask}} : [\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}] \href{../syntax/types.html#syntax-functype}{\rightarrow} [\href{../syntax/types.html#syntax-valtype}{\mathsf{i32}}]
 }\]</div>
 </div>
 </div>
