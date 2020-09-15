@@ -185,15 +185,15 @@ When several of these placeholders occur in a single clause, then they must be r
 </div>
 <div class="section" id="simd">
 <span id="aux-simdof"></span><span id="aux-simdto"></span><span id="index-5"></span><h3>SIMD<a class="headerlink" href="#simd" title="Permalink to this headline">¶</a></h3>
-<p>SIMD values have the same underlying representation as an <span class="math notranslate nohighlight">\(\href{../syntax/values.html#syntax-int}{\mathit{i128}}\)</span>. They can also be interpreted as numeric values packed into a <span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\)</span> with a particular <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\)</span>.</p>
+<p>SIMD values have the same underlying representation as an <span class="math notranslate nohighlight">\(\href{../syntax/values.html#syntax-int}{\mathit{i128}}\)</span>. They can also be interpreted as a sequence numeric values packed into a <span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\)</span> with a particular <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{lll&#64;{\qquad}l}
 \href{../exec/numerics.html#aux-simdto}{\mathrm{simd\_to}}_{t\mathsf{x}N}(c) &amp;=&amp;
-  c_0~\dots~c_N \\
+  c_0~\dots~c_{N-1} \\
   &amp;&amp; (\mathrel{\mbox{where}}
-    w = |t| / 8 \wedge
-    b^* = bytes_{\href{../syntax/values.html#syntax-int}{\mathit{i128}}}(i) \\ &amp;&amp;
-    \wedge c_j = bytes_{t}^{-1}(b^*[j*w \href{../syntax/conventions.html#notation-slice}{\mathrel{\mathbf{:}}} ((j+1)*w)])
+    B = |t| / 8 \wedge
+    b^* = bytes_{\href{../syntax/values.html#syntax-int}{\mathit{i128}}}(c) \\ &amp;&amp;
+    \wedge c_i = bytes_{t}^{-1}(b^*[i*B \href{../syntax/conventions.html#notation-slice}{\mathrel{\mathbf{:}}} B])
     )
 \end{array}\end{split}\]</div>
 <p>These functions are bijections, so they are invertible. For convenience, we give a name to the inverse function:</p>
@@ -1531,21 +1531,6 @@ It is not defined for NaNs, infinities, or values for which the result is out of
 \[\begin{array}{lll&#64;{\qquad}l}
 \href{../exec/numerics.html#op-narrow-u}{\mathrm{narrow}^{\mathsf{u}}}_{M,N}(i) &amp;=&amp; \href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(\href{../exec/numerics.html#aux-signed}{\mathrm{signed}}_M(i))
 \end{array}\]</div>
-</div>
-<div class="section" id="xref-syntax-instructions-syntax-instr-simd-mathsf-splat-shape-c">
-<h3><span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{splat}}_{shape}(c)\)</span><a class="headerlink" href="#xref-syntax-instructions-syntax-instr-simd-mathsf-splat-shape-c" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Let <span class="math notranslate nohighlight">\(t\)</span> be the type <span class="math notranslate nohighlight">\(\href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(shape)\)</span>.</p></li>
-<li><p>Let <span class="math notranslate nohighlight">\(n\)</span> be the type <span class="math notranslate nohighlight">\(\href{../valid/instructions.html#aux-lanes}{\mathrm{lanes}}(shape)\)</span>.</p></li>
-<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#aux-simdof}{\mathrm{simd\_of}}_{\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}}(c^1 \dots c^n)\)</span></p></li>
-</ul>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{array}{lll&#64;{\qquad}l}
-splat_{shape}(c) &amp;=&amp;
-\href{../exec/numerics.html#aux-simdof}{\mathrm{simd\_of}}_{shape}(c^1 \dots c^n)
-&amp; \mathrel{\mbox{if}} n = \href{../valid/instructions.html#aux-lanes}{\mathrm{lanes}}(shape)
-\\
-\end{array}\end{split}\]</div>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
 <p>shuffle, swizzle</p>
