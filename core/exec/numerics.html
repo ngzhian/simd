@@ -112,6 +112,10 @@ When several of these placeholders occur in a single clause, then they must be r
 \end{array}\end{split}\]</div>
 </div>
 <p>Numeric operators are lifted to input sequences by applying the operator element-wise, returning a sequence of results. When there are multiple inputs, they must be of equal length.</p>
+<div class="math notranslate nohighlight">
+\[\begin{array}{lll&#64;{\qquad}l}
+op(c_1^n, \dots, c_k^n) &amp;=&amp; op(c_1^n[0], \dots, c_k^n[0])~\dots~op(c_1^n[n-1], \dots, c_k^n[n-1])
+\end{array}\]</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For example, the unary operator <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-fabs}{\mathrm{fabs}}\)</span>, when given a sequence of floating-point values, return a sequence of floating-point results:</p>
@@ -184,23 +188,22 @@ When several of these placeholders occur in a single clause, then they must be r
 <p>Again these functions are invertable bijections.</p>
 </div>
 <div class="section" id="simd">
-<span id="aux-simdof"></span><span id="aux-simdto"></span><span id="index-5"></span><h3>SIMD<a class="headerlink" href="#simd" title="Permalink to this headline">¶</a></h3>
+<span id="aux-simdto"></span><span id="index-5"></span><h3>SIMD<a class="headerlink" href="#simd" title="Permalink to this headline">¶</a></h3>
 <p>SIMD values have the same underlying representation as an <span class="math notranslate nohighlight">\(\href{../syntax/values.html#syntax-int}{\mathit{i128}}\)</span>. They can also be interpreted as a sequence numeric values packed into a <span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\)</span> with a particular <span class="math notranslate nohighlight">\(\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}\)</span>.</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\begin{array}{lll&#64;{\qquad}l}
+\[\begin{split}\begin{array}{l}
+\begin{array}{lll&#64;{\qquad}l}
 \href{../exec/numerics.html#aux-simdto}{\mathrm{simd\_to}}_{t\mathsf{x}N}(c) &amp;=&amp;
   c_0~\dots~c_{N-1} \\
-  &amp;&amp; (\mathrel{\mbox{where}}
-    B = |t| / 8 \wedge \\ &amp;&amp;
-    b^* = bytes_{\href{../syntax/values.html#syntax-int}{\mathit{i128}}}(c) \\ &amp;&amp;
-    \wedge c_i = \href{../exec/numerics.html#aux-bytes}{\mathrm{bytes}}_{t}^{-1}(b^*[i*B \href{../syntax/conventions.html#notation-slice}{\mathrel{\mathbf{:}}} B])
-    )
+\end{array}
+\\ \qquad
+  \begin{array}[t]{&#64;{}r&#64;{~}l&#64;{}}
+  (\mathrel{\mbox{where}} &amp; B = |t| / 8 \\
+  \wedge &amp; b^* = bytes_{\href{../syntax/values.html#syntax-int}{\mathit{i128}}}(c) \\
+  \wedge &amp; c_i = \href{../exec/numerics.html#aux-bytes}{\mathrm{bytes}}_{t}^{-1}(b^*[i*B \href{../syntax/conventions.html#notation-slice}{\mathrel{\mathbf{:}}} B]))
+  \end{array}
 \end{array}\end{split}\]</div>
-<p>These functions are bijections, so they are invertible. For convenience, we give a name to the inverse function:</p>
-<div class="math notranslate nohighlight">
-\[\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#aux-simdof}{\mathrm{simd\_of}}_{\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}}(c^n) &amp;=&amp; \href{../exec/numerics.html#aux-simdto}{\mathrm{simd\_to}}_{\href{../syntax/instructions.html#syntax-shape}{\mathit{shape}}}^{-1}(c^n)
-\end{array}\]</div>
+<p>These functions are bijections, so they are invertible.</p>
 </div>
 </div>
 <div class="section" id="integer-operations">
@@ -224,11 +227,6 @@ Operators that use a signed interpretation convert the value using the following
 \href{../exec/numerics.html#aux-bool}{\mathrm{bool}}(C) &amp;=&amp; 1 &amp; (\mathrel{\mbox{if}} C) \\
 \href{../exec/numerics.html#aux-bool}{\mathrm{bool}}(C) &amp;=&amp; 0 &amp; (\mathrel{\mbox{otherwise}}) \\
 \end{array}\end{split}\]</div>
-<p>We lift <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#aux-bool}{\mathrm{bool}}\)</span> to sequences of predicates by conjunction over the inputs.</p>
-<div class="math notranslate nohighlight">
-\[\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#aux-bool}{\mathrm{bool}}(C_1~C_2^*) &amp;=&amp; \href{../exec/numerics.html#aux-bool}{\mathrm{bool}}(C_1) \wedge \href{../exec/numerics.html#aux-bool}{\mathrm{bool}}(C_2^*)
-\end{array}\]</div>
 </div>
 <div class="section" id="xref-exec-numerics-op-iadd-mathrm-iadd-n-i-1-i-2">
 <span id="op-iadd"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-iadd}{\mathrm{iadd}}_N(i_1, i_2)\)</span><a class="headerlink" href="#xref-exec-numerics-op-iadd-mathrm-iadd-n-i-1-i-2" title="Permalink to this headline">¶</a></h3>
@@ -607,13 +605,14 @@ it holds that <span class="math notranslate nohighlight">\(i_1 = i_2\cdot\href{.
 <div class="section" id="xref-exec-numerics-op-ibitselect-mathrm-ibitselect-n-i-1-i-2-c">
 <span id="op-ibitselect"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-ibitselect}{\mathrm{ibitselect}}_N(i_1, i_2, c)\)</span><a class="headerlink" href="#xref-exec-numerics-op-ibitselect-mathrm-ibitselect-n-i-1-i-2-c" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>Let <span class="math notranslate nohighlight">\(d_i\)</span> be the bit <span class="math notranslate nohighlight">\(i\)</span> of <span class="math notranslate nohighlight">\(i_1\)</span> if bit <span class="math notranslate nohighlight">\(i\)</span> of <span class="math notranslate nohighlight">\(c\)</span> is <span class="math notranslate nohighlight">\(1\)</span></p></li>
-<li><p>Else let <span class="math notranslate nohighlight">\(d_i\)</span> be the bit <span class="math notranslate nohighlight">\(i\)</span> of of <span class="math notranslate nohighlight">\(i_2\)</span>.</p></li>
-<li><p>Return the number represented by all the concatenation of all bits <span class="math notranslate nohighlight">\(d_i\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(j_1\)</span> be the bitwise conjunction of <span class="math notranslate nohighlight">\(i_1\)</span> and <span class="math notranslate nohighlight">\(c\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(c'\)</span> be the bitwise negation <span class="math notranslate nohighlight">\(c\)</span>.</p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(j_2\)</span> be the bitwise conjunction of <span class="math notranslate nohighlight">\(i_2\)</span> and <span class="math notranslate nohighlight">\(c'\)</span>.</p></li>
+<li><p>Return the bitwise disjunction of <span class="math notranslate nohighlight">\(j_1\)</span> and <span class="math notranslate nohighlight">\(j_2\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{array}{&#64;{}lcll}
-\href{../exec/numerics.html#op-ibitselect}{\mathrm{ibitselect}}_N(i_1, i_2, N) &amp;=&amp; \href{../exec/numerics.html#op-ior}{\mathrm{ior}}_N(\href{../exec/numerics.html#op-iand}{\mathrm{iand}}_N(i_1, c), \href{../exec/numerics.html#op-iand}{\mathrm{iand}}_N(i_2, \href{../exec/numerics.html#op-inot}{\mathrm{inot}}_N(c)))
+\href{../exec/numerics.html#op-ibitselect}{\mathrm{ibitselect}}_N(i_1, i_2, c) &amp;=&amp; \href{../exec/numerics.html#op-ior}{\mathrm{ior}}_N(\href{../exec/numerics.html#op-iand}{\mathrm{iand}}_N(i_1, c), \href{../exec/numerics.html#op-iand}{\mathrm{iand}}_N(i_2, \href{../exec/numerics.html#op-inot}{\mathrm{inot}}_N(c)))
 \end{array}\]</div>
 </div>
 <div class="section" id="xref-exec-numerics-op-iabs-mathrm-iabs-n-i">
@@ -635,9 +634,9 @@ it holds that <span class="math notranslate nohighlight">\(i_1 = i_2\cdot\href{.
 <li><p>Return the result of negating <span class="math notranslate nohighlight">\(i\)</span>, modulo <span class="math notranslate nohighlight">\(2^N\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
-\[\begin{split}\begin{array}{&#64;{}lcll}
-\href{../exec/numerics.html#op-ineg}{\mathrm{ineg}}_N(i) &amp;=&amp; \href{../exec/numerics.html#op-iadd}{\mathrm{iadd}}_N(\href{../exec/numerics.html#op-inot}{\mathrm{inot}}_N(i), 1) \\
-\end{array}\end{split}\]</div>
+\[\begin{array}{&#64;{}lcll}
+\href{../exec/numerics.html#op-ineg}{\mathrm{ineg}}_N(i) &amp;=&amp; (0 - i) \mathbin{\mathrm{mod}} 2^N
+\end{array}\]</div>
 </div>
 <div class="section" id="xref-exec-numerics-op-imin-u-mathrm-imin-u-n-i-1-i-2">
 <span id="op-imin-u"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-imin-u}{\mathrm{imin\_u}}_N(i_1, i_2)\)</span><a class="headerlink" href="#xref-exec-numerics-op-imin-u-mathrm-imin-u-n-i-1-i-2" title="Permalink to this headline">¶</a></h3>
@@ -687,11 +686,11 @@ it holds that <span class="math notranslate nohighlight">\(i_1 = i_2\cdot\href{.
 <span id="op-iadd-sat-u"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-iaddsat-u}{\mathrm{iaddsat\_u}}_N(i_1, i_2)\)</span><a class="headerlink" href="#xref-exec-numerics-op-iaddsat-u-mathrm-iaddsat-u-n-i-1-i-2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Let <span class="math notranslate nohighlight">\(i\)</span> be the result of adding <span class="math notranslate nohighlight">\(i_1\)</span> and <span class="math notranslate nohighlight">\(i_2\)</span>.</p></li>
-<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(i)\)</span>.</p></li>
+<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-sat-u}{\mathrm{sat}^{\mathsf{u}}}_N(i)\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#op-iaddsat-u}{\mathrm{iaddsat\_u}}_N(i_1, i_2) &amp;=&amp; \href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(i_1 + i_2)
+\href{../exec/numerics.html#op-iaddsat-u}{\mathrm{iaddsat\_u}}_N(i_1, i_2) &amp;=&amp; \href{../exec/numerics.html#op-sat-u}{\mathrm{sat}^{\mathsf{u}}}_N(i_1 + i_2)
 \end{array}\]</div>
 </div>
 <div class="section" id="xref-exec-numerics-op-iaddsat-s-mathrm-iaddsat-s-n-i-1-i-2">
@@ -700,22 +699,22 @@ it holds that <span class="math notranslate nohighlight">\(i_1 = i_2\cdot\href{.
 <li><p>Let <span class="math notranslate nohighlight">\(j_1\)</span> be the signed interpretation of <span class="math notranslate nohighlight">\(i_1\)</span></p></li>
 <li><p>Let <span class="math notranslate nohighlight">\(j_2\)</span> be the signed interpretation of <span class="math notranslate nohighlight">\(i_2\)</span></p></li>
 <li><p>Let <span class="math notranslate nohighlight">\(j\)</span> be the result of adding <span class="math notranslate nohighlight">\(j_1\)</span> and <span class="math notranslate nohighlight">\(j_2\)</span>.</p></li>
-<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(j)\)</span>.</p></li>
+<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(j)\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#op-iaddsat-s}{\mathrm{iaddsat\_s}}_N(i_1, i_2) &amp;=&amp; \href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(\href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i_1) + \href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i_2))
+\href{../exec/numerics.html#op-iaddsat-s}{\mathrm{iaddsat\_s}}_N(i_1, i_2) &amp;=&amp; \href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(\href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i_1) + \href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i_2))
 \end{array}\]</div>
 </div>
 <div class="section" id="xref-exec-numerics-op-isubsat-u-mathrm-isubsat-u-n-i-1-i-2">
 <span id="op-isub-sat-u"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-isubsat-u}{\mathrm{isubsat\_u}}_N(i_1, i_2)\)</span><a class="headerlink" href="#xref-exec-numerics-op-isubsat-u-mathrm-isubsat-u-n-i-1-i-2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Let <span class="math notranslate nohighlight">\(i\)</span> be the result of subtracting <span class="math notranslate nohighlight">\(i_2\)</span> from <span class="math notranslate nohighlight">\(i_1\)</span>.</p></li>
-<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(i)\)</span>.</p></li>
+<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-sat-u}{\mathrm{sat}^{\mathsf{u}}}_N(i)\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#op-isubsat-u}{\mathrm{isubsat\_u}}_N(i_1, i_2) &amp;=&amp; \href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(i_1 - i_2)
+\href{../exec/numerics.html#op-isubsat-u}{\mathrm{isubsat\_u}}_N(i_1, i_2) &amp;=&amp; \href{../exec/numerics.html#op-sat-u}{\mathrm{sat}^{\mathsf{u}}}_N(i_1 - i_2)
 \end{array}\]</div>
 </div>
 <div class="section" id="xref-exec-numerics-op-isubsat-s-mathrm-isubsat-s-n-i-1-i-2">
@@ -724,11 +723,11 @@ it holds that <span class="math notranslate nohighlight">\(i_1 = i_2\cdot\href{.
 <li><p>Let <span class="math notranslate nohighlight">\(j_1\)</span> be the signed interpretation of <span class="math notranslate nohighlight">\(i_1\)</span></p></li>
 <li><p>Let <span class="math notranslate nohighlight">\(j_2\)</span> be the signed interpretation of <span class="math notranslate nohighlight">\(i_2\)</span></p></li>
 <li><p>Let <span class="math notranslate nohighlight">\(j\)</span> be the result of subtracting <span class="math notranslate nohighlight">\(j_2\)</span> from <span class="math notranslate nohighlight">\(j_1\)</span>.</p></li>
-<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(j)\)</span>.</p></li>
+<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(j)\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#op-isubsat-s}{\mathrm{isubsat\_s}}_N(i_1, i_2) &amp;=&amp; \href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(\href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i_i) - \href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i_2))
+\href{../exec/numerics.html#op-isubsat-s}{\mathrm{isubsat\_s}}_N(i_1, i_2) &amp;=&amp; \href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(\href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i_i) - \href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i_2))
 \end{array}\]</div>
 </div>
 <div class="section" id="xref-exec-numerics-op-iavgr-u-mathrm-iavgr-u-n-i-1-i-2">
@@ -1475,20 +1474,20 @@ It is not defined for NaNs, infinities, or values for which the result is out of
 \href{../exec/numerics.html#op-reinterpret}{\mathrm{reinterpret}}_{t_1,t_2}(c) &amp;=&amp; \href{../exec/numerics.html#aux-bits}{\mathrm{bits}}_{t_2}^{-1}(\href{../exec/numerics.html#aux-bits}{\mathrm{bits}}_{t_1}(c)) \\
 \end{array}\end{split}\]</div>
 </div>
-<div class="section" id="xref-exec-numerics-op-saturate-u-mathrm-saturate-mathsf-u-n-i">
-<span id="op-saturate-u"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(i)\)</span><a class="headerlink" href="#xref-exec-numerics-op-saturate-u-mathrm-saturate-mathsf-u-n-i" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="xref-exec-numerics-op-sat-u-mathrm-sat-mathsf-u-n-i">
+<span id="op-sat-u"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-sat-u}{\mathrm{sat}^{\mathsf{u}}}_N(i)\)</span><a class="headerlink" href="#xref-exec-numerics-op-sat-u-mathrm-sat-mathsf-u-n-i" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>If <span class="math notranslate nohighlight">\(i\)</span> is greater than <span class="math notranslate nohighlight">\(2^N-1\)</span>, return <span class="math notranslate nohighlight">\(2^N-1\)</span>.</p></li>
 <li><p>Else return <span class="math notranslate nohighlight">\(i\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(i) &amp;=&amp; 2^N-1 &amp; (\mathrel{\mbox{if}} i &gt; 2^N-1)\\
-\href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(i) &amp;=&amp; i &amp; (\mathrel{\mbox{otherwise}})
+\href{../exec/numerics.html#op-sat-u}{\mathrm{sat}^{\mathsf{u}}}_N(i) &amp;=&amp; 2^N-1 &amp; (\mathrel{\mbox{if}} i &gt; 2^N-1)\\
+\href{../exec/numerics.html#op-sat-u}{\mathrm{sat}^{\mathsf{u}}}_N(i) &amp;=&amp; i &amp; (\mathrel{\mbox{otherwise}})
 \end{array}\end{split}\]</div>
 </div>
-<div class="section" id="xref-exec-numerics-op-saturate-s-mathrm-saturate-mathsf-s-n-i">
-<span id="op-saturate-s"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(i)\)</span><a class="headerlink" href="#xref-exec-numerics-op-saturate-s-mathrm-saturate-mathsf-s-n-i" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="xref-exec-numerics-op-sat-s-mathrm-sat-mathsf-s-n-i">
+<span id="op-sat-s"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(i)\)</span><a class="headerlink" href="#xref-exec-numerics-op-sat-s-mathrm-sat-mathsf-s-n-i" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Let <span class="math notranslate nohighlight">\(j\)</span> be the <a class="reference internal" href="#aux-signed"><span class="std std-ref">signed interpretation</span></a> of <span class="math notranslate nohighlight">\(i\)</span> of size <span class="math notranslate nohighlight">\(N\)</span>.</p></li>
 <li><p>If <span class="math notranslate nohighlight">\(j\)</span> is less than <span class="math notranslate nohighlight">\(-2^{N-1}\)</span>, return <span class="math notranslate nohighlight">\(-2^{N-1}\)</span>.</p></li>
@@ -1497,36 +1496,32 @@ It is not defined for NaNs, infinities, or values for which the result is out of
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(i) &amp;=&amp; -2^{N-1} &amp; (\mathrel{\mbox{if}} \href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i) &lt; -2^{N-1})\\
-\href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(i) &amp;=&amp; 2^N-1 &amp; (\mathrel{\mbox{if}} \href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i) &gt; 2^N-1)\\
-\href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(i) &amp;=&amp; i &amp; (\mathrel{\mbox{otherwise}})
+\href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(i) &amp;=&amp; -2^{N-1} &amp; (\mathrel{\mbox{if}} \href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i) &lt; -2^{N-1})\\
+\href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(i) &amp;=&amp; 2^N-1 &amp; (\mathrel{\mbox{if}} \href{../exec/numerics.html#aux-signed}{\mathrm{signed}}(i) &gt; 2^N-1)\\
+\href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(i) &amp;=&amp; i &amp; (\mathrel{\mbox{otherwise}})
 \end{array}\end{split}\]</div>
 </div>
 <div class="section" id="xref-exec-numerics-op-narrow-s-mathrm-narrow-mathsf-s-m-n-i">
 <span id="op-narrow-s"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-narrow-s}{\mathrm{narrow}^{\mathsf{s}}}_{M,N}(i)\)</span><a class="headerlink" href="#xref-exec-numerics-op-narrow-s-mathrm-narrow-mathsf-s-m-n-i" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Let <span class="math notranslate nohighlight">\(j\)</span> be the <a class="reference internal" href="#aux-signed"><span class="std std-ref">signed interpretation</span></a> of <span class="math notranslate nohighlight">\(i\)</span> of size <span class="math notranslate nohighlight">\(M\)</span>.</p></li>
-<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(j)\)</span>.</p></li>
+<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(j)\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#op-narrow-s}{\mathrm{narrow}^{\mathsf{s}}}_{M,N}(i) &amp;=&amp; \href{../exec/numerics.html#op-saturate-s}{\mathrm{saturate}^{\mathsf{s}}}_N(\href{../exec/numerics.html#aux-signed}{\mathrm{signed}}_M(i))
+\href{../exec/numerics.html#op-narrow-s}{\mathrm{narrow}^{\mathsf{s}}}_{M,N}(i) &amp;=&amp; \href{../exec/numerics.html#op-sat-s}{\mathrm{sat}^{\mathsf{s}}}_N(\href{../exec/numerics.html#aux-signed}{\mathrm{signed}}_M(i))
 \end{array}\]</div>
 </div>
 <div class="section" id="xref-exec-numerics-op-narrow-u-mathrm-narrow-mathsf-u-m-n-i">
 <span id="op-narrow-u"></span><h3><span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-narrow-u}{\mathrm{narrow}^{\mathsf{u}}}_{M,N}(i)\)</span><a class="headerlink" href="#xref-exec-numerics-op-narrow-u-mathrm-narrow-mathsf-u-m-n-i" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Let <span class="math notranslate nohighlight">\(j\)</span> be the <a class="reference internal" href="#aux-signed"><span class="std std-ref">signed interpretation</span></a> of <span class="math notranslate nohighlight">\(i\)</span> of size <span class="math notranslate nohighlight">\(M\)</span>.</p></li>
-<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(j)\)</span>.</p></li>
+<li><p>Return <span class="math notranslate nohighlight">\(\href{../exec/numerics.html#op-sat-u}{\mathrm{sat}^{\mathsf{u}}}_N(j)\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{array}{lll&#64;{\qquad}l}
-\href{../exec/numerics.html#op-narrow-u}{\mathrm{narrow}^{\mathsf{u}}}_{M,N}(i) &amp;=&amp; \href{../exec/numerics.html#op-saturate-u}{\mathrm{saturate}^{\mathsf{u}}}_N(\href{../exec/numerics.html#aux-signed}{\mathrm{signed}}_M(i))
+\href{../exec/numerics.html#op-narrow-u}{\mathrm{narrow}^{\mathsf{u}}}_{M,N}(i) &amp;=&amp; \href{../exec/numerics.html#op-sat-u}{\mathrm{sat}^{\mathsf{u}}}_N(\href{../exec/numerics.html#aux-signed}{\mathrm{signed}}_M(i))
 \end{array}\]</div>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>shuffle, swizzle</p>
-</div>
 </div>
 </div>
 </div>
