@@ -214,7 +214,7 @@ For the other integer instructions, the use of two’s complement for the signed
 </div>
 </div>
 <div class="section" id="simd-instructions">
-<span id="syntax-instr-simd"></span><span id="syntax-vfbinop"></span><span id="syntax-vfunop"></span><span id="syntax-visatbinop"></span><span id="syntax-viminmaxop"></span><span id="syntax-vibinop"></span><span id="syntax-viunop"></span><span id="syntax-vshiftop"></span><span id="syntax-vfrelop"></span><span id="syntax-virelop"></span><span id="syntax-vtestop"></span><span id="syntax-vsternop"></span><span id="syntax-vsbinop"></span><span id="syntax-vsunop"></span><span id="syntax-vternop"></span><span id="syntax-vbinop"></span><span id="syntax-vunop"></span><span id="syntax-shape"></span><span id="syntax-laneidx"></span><span id="index-2"></span><h2>SIMD Instructions<a class="headerlink" href="#simd-instructions" title="Permalink to this headline">¶</a></h2>
+<span id="syntax-instr-simd"></span><span id="syntax-vfbinop"></span><span id="syntax-vfunop"></span><span id="syntax-visatbinop"></span><span id="syntax-viminmaxop"></span><span id="syntax-vibinop"></span><span id="syntax-viunop"></span><span id="syntax-vshiftop"></span><span id="syntax-vfrelop"></span><span id="syntax-virelop"></span><span id="syntax-vitestop"></span><span id="syntax-vsternop"></span><span id="syntax-vsbinop"></span><span id="syntax-vsunop"></span><span id="syntax-vternop"></span><span id="syntax-vbinop"></span><span id="syntax-vunop"></span><span id="syntax-shape"></span><span id="syntax-laneidx"></span><span id="index-2"></span><h2>SIMD Instructions<a class="headerlink" href="#simd-instructions" title="Permalink to this headline">¶</a></h2>
 <p>SIMD instructions provide basic operations over <a class="reference internal" href="values.html#syntax-value"><span class="std std-ref">values</span></a> of type <span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{llcl}
@@ -227,7 +227,7 @@ For the other integer instructions, the use of two’s complement for the signed
 \def\mathdef1737#1{{}}\mathdef1737{lane index} &amp; \href{../syntax/instructions.html#syntax-laneidx}{\mathit{laneidx}} &amp;::=&amp; \href{../syntax/values.html#syntax-byte}{\mathit{byte}} \\
 \def\mathdef1737#1{{}}\mathdef1737{instruction} &amp; \href{../syntax/instructions.html#syntax-instr}{\mathit{instr}} &amp;::=&amp;
   \dots \\&amp;&amp;|&amp;
-  \mathsf{v128.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{const}}~\href{../syntax/values.html#syntax-simd}{\def\mathdef1778#1{{\mathit{v#1}}}\mathdef1778{\mathit{nnn}}} \\&amp;&amp;|&amp;
+  \mathsf{v128.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{const}}~\href{../syntax/values.html#syntax-int}{\mathit{i128}} \\&amp;&amp;|&amp;
   \mathsf{v128.}\href{../syntax/instructions.html#syntax-vsunop}{\mathit{vsunop}} \\&amp;&amp;|&amp;
   \mathsf{v128.}\href{../syntax/instructions.html#syntax-vsbinop}{\mathit{vsbinop}} \\&amp;&amp;|&amp;
   \mathsf{v128.}\href{../syntax/instructions.html#syntax-vsternop}{\mathit{vsternop}} \\&amp;&amp;|&amp;
@@ -247,9 +247,9 @@ For the other integer instructions, the use of two’s complement for the signed
   \mathsf{i32x4.}\href{../syntax/instructions.html#syntax-viunop}{\mathit{viunop}} \\&amp;&amp;|&amp;
   \mathsf{i64x2.}\href{../syntax/instructions.html#syntax-instr-numeric}{\mathsf{neg}} \\&amp;&amp;|&amp;
   \href{../syntax/instructions.html#syntax-shape}{\mathit{fshape}}\mathsf{.}\href{../syntax/instructions.html#syntax-vfunop}{\mathit{vfunop}} \\&amp;&amp;|&amp;
-  \mathsf{i8x16.}\href{../syntax/instructions.html#syntax-vtestop}{\mathit{vtestop}} ~|~
-  \mathsf{i16x8.}\href{../syntax/instructions.html#syntax-vtestop}{\mathit{vtestop}} ~|~
-  \mathsf{i32x4.}\href{../syntax/instructions.html#syntax-vtestop}{\mathit{vtestop}} \\&amp;&amp;|&amp;
+  \mathsf{i8x16.}\href{../syntax/instructions.html#syntax-vitestop}{\mathit{vitestop}} ~|~
+  \mathsf{i16x8.}\href{../syntax/instructions.html#syntax-vitestop}{\mathit{vitestop}} ~|~
+  \mathsf{i32x4.}\href{../syntax/instructions.html#syntax-vitestop}{\mathit{vitestop}} \\&amp;&amp;|&amp;
   \mathsf{i8x16.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{bitmask}} ~|~
   \mathsf{i16x8.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{bitmask}} ~|~
   \mathsf{i32x4.}\href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{bitmask}} \\&amp;&amp;|&amp;
@@ -284,7 +284,7 @@ For the other integer instructions, the use of two’s complement for the signed
   \mathsf{xor} \\
 \def\mathdef1737#1{{}}\mathdef1737{SIMD ternary operator} &amp; \href{../syntax/instructions.html#syntax-vsternop}{\mathit{vsternop}} &amp;::=&amp;
   \mathsf{bitselect} \\
-\def\mathdef1737#1{{}}\mathdef1737{SIMD test operator} &amp; \href{../syntax/instructions.html#syntax-vtestop}{\mathit{vtestop}} &amp;::=&amp;
+\def\mathdef1737#1{{}}\mathdef1737{SIMD test operator} &amp; \href{../syntax/instructions.html#syntax-vitestop}{\mathit{vitestop}} &amp;::=&amp;
   \mathsf{any\_true} ~|~
   \mathsf{all\_true} \\
 \def\mathdef1737#1{{}}\mathdef1737{SIMD integer relational operator} &amp; \href{../syntax/instructions.html#syntax-virelop}{\mathit{virelop}} &amp;::=&amp;
@@ -375,7 +375,6 @@ For the other SIMD instructions, the use of two’s complement for the signed in
   \href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{avgr}}\mathsf{\_u} ~|~
   \href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{trunc}} ~|~
   \href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{convert}} \\
-\def\mathdef1737#1{{}}\mathdef1737{ternary operator} &amp; \href{../syntax/instructions.html#syntax-vsternop}{\mathit{vsternop}} &amp;::=&amp; \href{../syntax/instructions.html#syntax-instr-simd}{\mathsf{shuffle}} \\
 \end{array}\end{split}\]</div>
 </div>
 </div>
