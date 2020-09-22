@@ -196,7 +196,7 @@ In contrast,</p>
 </div>
 </div>
 <div class="section" id="simd-instructions">
-<span id="aux-packed"></span><span id="aux-unpacked"></span><span id="valid-instr-simd"></span><span id="index-2"></span><h2>SIMD Instructions<a class="headerlink" href="#simd-instructions" title="Permalink to this headline">¶</a></h2>
+<span id="aux-unpacked"></span><span id="valid-instr-simd"></span><span id="index-2"></span><h2>SIMD Instructions<a class="headerlink" href="#simd-instructions" title="Permalink to this headline">¶</a></h2>
 <p>SIMD instructions can have a prefix to describe the <a class="reference internal" href="../syntax/instructions.html#syntax-simd-shape"><span class="std std-ref">shape</span></a> of the operand. Packed numeric types, <span class="math notranslate nohighlight">\(\href{../exec/runtime.html#syntax-storagetype}{\mathsf{i8}}\)</span> and <span class="math notranslate nohighlight">\(\href{../exec/runtime.html#syntax-storagetype}{\mathsf{i16}}\)</span>, are not <a class="reference internal" href="../syntax/types.html#syntax-valtype"><span class="std std-ref">value type</span></a>, we define an auxiliary function to map such packed types into value types:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{lll&#64;{\qquad}l}
@@ -204,10 +204,6 @@ In contrast,</p>
 \href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(\mathsf{i16x8}) &amp;=&amp; \href{../syntax/types.html#syntax-valtype}{\mathsf{i32}} \\
 \href{../valid/instructions.html#aux-unpacked}{\mathrm{unpacked}}(t\mathsf{x}N) &amp;=&amp; t
 \end{array}\end{split}\]</div>
-<div class="math notranslate nohighlight">
-\[\begin{array}{lll&#64;{\qquad}l}
-\href{../valid/instructions.html#aux-packed}{\mathrm{packed}}(t\mathsf{x}N) &amp;=&amp; t
-\end{array}\]</div>
 <p>We also define an auxiliary function to get number of packed numeric types in a <span class="math notranslate nohighlight">\(\href{../syntax/types.html#syntax-valtype}{\mathsf{v128}}\)</span>:</p>
 <div class="math notranslate nohighlight" id="aux-lanes">
 \[\begin{array}{lll&#64;{\qquad}l}
